@@ -13,20 +13,43 @@ for i in range(N):
 storage = 0
 bills = 0
 
-# test if we can fill all the orders, assuming we produce maximally every day 
+# to create an optimal strategy we first need to know the total amount 
+# of products that we have to sell 
+# 
+# it also lets us know if we have too many in stock 
 
 def test_viability(orders): 
 
-    for i in range(len(orders)): 
-        
-        day_i = orders[i][0]
-        order_i = orders[i][1]
-        produce_capacity = Z + (day_i - 1) * K - sum([narocila[j][1] for j in range(i)])
-        
-        print("day", day_i, "order", order_i, "capacity", produce_capacity)
+    total = sum([orders[i][1] for i in range(len(orders))])
+    
+    if Z > total:
+        stock = total
+        for i in range(len(orders)): 
+
+            day_i = orders[i][0]
+            order_i = orders[i][1]
+            stock = stock - order_i
+            print("day", day_i, "order", order_i, "stock", stock)
+
+    else: 
+        for i in range(len(orders)): 
+
+            day_i = orders[i][0]
+            order_i = orders[i][1]
+            stock = Z + (day_i - 1) * K - sum([narocila[j][1] for j in range(i)])
+
+            if order_i > stock:         
+                print(-1)
+                break 
+            else:
+                print("day", day_i, "order", order_i, "stock", stock)
 
 
 test_viability(narocila)
+
+# test if we have too many products in stock 
+
+
 
 
 
