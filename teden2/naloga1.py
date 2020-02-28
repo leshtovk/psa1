@@ -45,7 +45,7 @@ def optimal_strategy():
         strat.append([produce, orders[i]])
 
     if residue > 0: 
-        return(-1)
+        return -1
     else:
         strat.reverse()
         return strat
@@ -54,7 +54,7 @@ def use_stored(Z):
 
     # destroy extra inventory if there is any 
     if Z > total: Z = total
-    strat = optimal_strategy()
+    strat = optimal_strategy() 
 
     if strat == -1: 
         return strat
