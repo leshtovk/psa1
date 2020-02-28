@@ -3,9 +3,10 @@
 # we have to look at the list and see if we have anything in stock that 
 # we can't sell within the year and destroy it before we get charged for it
 
+# ----------------- - ORGANIZE INPUT DATA -----------------------
+
 (N, Z, K, S) = map(int, input().split())
 
-# `narocila` is a list that contains `(Di, Xi)` as its elements
 narocila = []
 for i in range(N):
     narocila.append(tuple(map(int, input().split())))
@@ -24,57 +25,46 @@ for i in range(len(days)):
 
 total = sum(orders)
 
+# ---------------- FIND OPTIMAL STRATEGY -------------------------
+
 def need_to_make(order, capacity): 
     return min(order, capacity)
 
 def optimal_strategy(): 
-    need = 0
-    res = 0
-    order = orders[-1]
-    strategy = []
+
+    produce = 0
+    residue = order = orders[-1]
+    strategy = [(0, order)]
 
     for i in range(len(orders) - 2, -1, -1): 
-        need = need_to_make(order, K) 
-        res = order - need
-        order = orders[i] + res
 
-        strategy.append(need)   
+        produce = need_to_make(order, K) 
+        residue = order - produce
+        order = orders[i] + residue
 
-    strategy.reverse()
-    return strategy
+        strategy.append([produce, orders[i]])
 
-#####################################################################################
-
-def test_viability(): 
-    
-    if Z > total:
-
-        stock = total    
-        for i in range(N): 
-
-            day_i = days[i]
-            order_i = orders[i]
-            stock = stock - order_i
-            print("day", day_i, "order", order_i, "stock", stock)
-
+    if residue > 0: 
+        return(-1)
     else:
+        strategy.reverse()
+        return strategy
 
-        for i in range(N): 
+def use_stored(Z): 
 
-            day_i = days[i]
-            order_i = orders[i]
-            stock = Z + (day_i - 1) * K - sum([orders[j] for j in range(i)])
+    # destroy extra inventory if there is any 
+    if Z > total: Z = total
+    strat = optimal_strategy()
+    
+    i = 0
+    while Z > 0 and i < len(strat):
+        if strat[i][0] > 0: 
+            strat[i][0] = strat[i][0] - 1
+            Z = Z - 1
+        i = i + 1
 
-            if order_i > stock:         
-                print(-1)
-                break 
-            else:
-                print("day", day_i, "order", order_i, "stock", stock)
+    return strat
 
-            
+    
 
-# test_viability()
-# print(days)
-# print(shipping_days)
-# print(orders)
-print(optimal_strategy())
+print(use_stored(Z))
