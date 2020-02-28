@@ -34,7 +34,7 @@ def optimal_strategy():
 
     produce = 0
     residue = order = orders[-1]
-    strategy = [(0, order)]
+    strat = [[0, order]]
 
     for i in range(len(orders) - 2, -1, -1): 
 
@@ -42,28 +42,31 @@ def optimal_strategy():
         residue = order - produce
         order = orders[i] + residue
 
-        strategy.append([produce, orders[i]])
+        strat.append([produce, orders[i]])
 
     if residue > 0: 
         return(-1)
     else:
-        strategy.reverse()
-        return strategy
+        strat.reverse()
+        return strat
 
 def use_stored(Z): 
 
     # destroy extra inventory if there is any 
     if Z > total: Z = total
     strat = optimal_strategy()
-    
-    i = 0
-    while Z > 0 and i < len(strat):
-        if strat[i][0] > 0: 
-            strat[i][0] = strat[i][0] - 1
-            Z = Z - 1
-        i = i + 1
 
-    return strat
+    if strat == -1: 
+        return strat
+    else:
+        i = 0
+        while Z > 0 and i < len(strat):
+            if strat[i][0] > 0: 
+                strat[i][0] = strat[i][0] - 1
+                Z = Z - 1
+            i = i + 1
+
+        return strat
 
     
 
