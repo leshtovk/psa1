@@ -1,73 +1,57 @@
-# everything that is in stock has been stored before the year begins 
-# we also have the list of orders before the year begins 
-# we have to look at the list and see if we have anything in stock that 
-# we can't sell within the year and destroy it before we get charged for it
+(N, Z, K, S) = tuple(map(int, input().split()))
 
-# ----------------- - ORGANIZE INPUT DATA -----------------------
+narocila = [[0, 0] for i in range(N)]
+for i in range(N): 
+    narocila[i] = tuple(map(int, input().split()))
 
-(N, Z, K, S) = map(int, input().split())
-
-narocila = []
+num_of_days = narocila[-1][0]
+orders = [0 for i in range(num_of_days)]
 for i in range(N):
-    narocila.append(tuple(map(int, input().split())))
-
-shipping_days = [narocila[i][0] for i in range(N)]
-days = [i for i in range(1, shipping_days[-1] + 1)]
-
-orders = []
-j = 0
-for i in range(len(days)):
-    if days[i] in shipping_days:
-        orders.append(narocila[j][1])
-        j = j + 1
-    else: 
-        orders.append(0)
-
-total = sum(orders)
-
-# ---------------- FIND OPTIMAL STRATEGY -------------------------
-
-def need_to_make(order, capacity): 
-    return min(order, capacity)
-
-def optimal_strategy(): 
-
-    produce = 0
-    residue = order = orders[-1]
-    strat = [[0, order]]
-
-    for i in range(len(orders) - 2, -1, -1): 
-
-        produce = need_to_make(order, K) 
-        residue = order - produce
-        order = orders[i] + residue
-
-        strat.append([produce, orders[i]])
-
-    if residue > 0: 
-        return -1
-    else:
-        strat.reverse()
-        return strat
-
-def use_stored(Z): 
-
-    # destroy extra inventory if there is any 
-    if Z > total: Z = total
-    strat = optimal_strategy() 
-
-    if strat == -1: 
-        return strat
-    else:
-        i = 0
-        while Z > 0 and i < len(strat):
-            if strat[i][0] > 0: 
-                strat[i][0] = strat[i][0] - 1
-                Z = Z - 1
-            i = i + 1
-
-        return strat
-
+    orders[narocila[i][0] - 1] = narocila[i][1]
     
+def strategy(num_of_days, orders, init_inventory, prod_capacity, storage_charge):
+    """Compute the optimal strategy for filling all the orders, 
+       assuming we don't sell any of the initial inventory."""
+       
+    order = inventory = orders[-1]
+    production = 0
+    
+    debt = inventory * storage_charge
+    strat = [[0, 0] for i in range(num_of_days - 2, -1, -1)] + [[inventory, production]]
+    
+    for i in range(num_of_days - 2, -1, -1):    
+        order = orders[i]
+        production = min(prod_capacity, inventory)
+        inventory = inventory + order - production
+        
+        debt = debt + (inventory * storage_charge)
+        strat[i] = [inventory, production]
+        
+    inventory = init_inventory
+    if inventory < order: return (strat, -1)
+    else: return (strat, debt)
+     
+def optimal_strategy(num_of_days, orders, init_inventory, storage_charge, strategy, debt):
+    """Account for storing the initial inventory"""
+    
+    if debt == -1: print(-1)
+    else: 
+        total_orders = sum(orders)
+        if init_inventory > total_orders: init_inventory = total_orders
+        
+        for i in range(1, num_of_days): 
+            day_i_production = strategy[i-1][1]
+            if day_i_production != 0 and init_inventory != 0:
+            
+                if day_i_production >= init_inventory:
+                    debt = debt + (init_inventory * i * storage_charge)
+                    init_inventory = 0
+                    
+                else:
+                    debt = debt + (day_i_production * i * storage_charge)
+                    init_inventory = init_inventory - day_i_production
+        
+        print(debt)
 
-print(use_stored(Z))
+strategy, debt = strategy(num_of_days, orders, Z, K, S)
+optimal_strategy(num_of_days, orders, Z, S, strategy, debt)
