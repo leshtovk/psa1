@@ -13,5 +13,8 @@ int main(){
         cout << word << " "; 
     }
 
+    // build with ctrl + shift + b
+    // run in terminal with .\helloworld
+
     cout << endl; 
 }
