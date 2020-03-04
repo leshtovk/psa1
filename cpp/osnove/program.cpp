@@ -13,6 +13,9 @@ int main() {
 
     // 2. run the program in the terminal with 
     // .\program 
+	
+	// Following tutorial:
+	// http://e6.ijs.si/~jslak/c++/
 
 
 
