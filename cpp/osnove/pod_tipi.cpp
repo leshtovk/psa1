@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <set>
+#include <unordered_set>
 
 int main(){
 	
@@ -87,32 +89,75 @@ int main(){
 	// }
 	// std::cout << std::endl;
 	
+	// std::vector<int> b(100);
+	// for (std::vector<int>::iterator it = b.begin();
+	// 	it < b.end(); ++it) {
+	// 		std::cout << it - b.begin() + 1 
+	// 		<< ": " << *it << std::endl; 
+	// 	}
+	
 	// ----------------------------------------------------------
 	
 	// character strings
 	
-	std::string name;
-	std::string delimiter = " ";
+	// std::string name;
+	// std::string delimiter = " ";
+	// 
+	// std::cout << "Enter thein name: ";
+	// std::getline (std::cin, name);
+	// 	// get line from input stream
+	// 	// store the characters into `str`
+	// 	
+	// std::string firstname = name.substr(0, name.find(delimiter));
+	// std::cout << "Sup " << firstname << std::endl;
 	
-	std::cout << "Enter thein name: ";
-	std::getline (std::cin, name);
-		// get line from input stream
-		// store the characters into `str`
+	// ----------------------------------------------------------
+	
+	// sets 
+	
+	// std::set<typename T>	-- ordered, slower
+	std::set<int> a({1, 2, 2, 2, 1, 5, 6, 7, 8, 123123, 0});
+	
+	std::cout << "Thein ordered set: {";
+	for (std::set<int>::iterator it = a.begin();
+		it != a.end(); ++it) {
+			if (std::next(it, 1) == a.end()) {
+			std::cout << *it << "}" << std::endl;
+			}
+			else {
+				std::cout << *it << ", ";
+			}
+		}
+	// note: 
+	// `+` and `-` can't be used on `std::set<int>::iterator` 
 		
-	std::string firstname = name.substr(0, name.find(delimiter));
-	std::cout << "Sup " << firstname << std::endl;
+	// std::unordered_set<typename T> -- unordered, faster
+	std::unordered_set<int> b({213213, 231, 5, 12343, 0, 8, 32});
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	std::cout << "Thein unordered set: {";
+	for (std::unordered_set<int>::iterator it = b.begin();
+		it != b.end(); ++it) {
+			if (std::next(it, 1) == b.end()) {
+				std::cout << *it << "}" << std::endl;
+			}
+			else {
+				std::cout << *it << ", "; 
+			}
+		}
 		
+	// keep in mind `a` and `b` are different types of sets
+	int i = 0;
+	std::cout << "The amount of common elements: ";
+	for (std::set<int>::iterator it = a.begin();
+		it != a.end(); ++it){
+			if (b.find(*it) != b.end()) {
+				// `b.end()` returns an iterator referring
+				// to the past-the-end element of `b`
+				++i;
+			}
+		}
+	std:: cout << i << std::endl;
+		
+	
 	return 0;
 }
