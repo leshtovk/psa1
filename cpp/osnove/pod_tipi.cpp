@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
+#include <numeric> // for `iota`
 #include <string>
 #include <set>
 #include <unordered_set>
+#include <map>
 
 int main(){
 	
@@ -34,15 +36,15 @@ int main(){
 	// int a = 1;
 	// bool nonzero = a != 0;
 	// while (nonzero) {
-	// 	std::cout << "You lame" << std::endl;
-	// 	
-	// 	std::cin >> a;
-	// 	nonzero = a != 0;
+	//     std::cout << "You lame" << std::endl;
+	//     	
+	//     std::cin >> a;
+	//     nonzero = a != 0;
 	// }
 	
 	// ----------------------------------------------------------
 	
-	// lists
+	// vectors
 
 	// std::vector<int> a({1, 2, 3});
 		// a list with a fixed length is an `array`
@@ -98,6 +100,30 @@ int main(){
 	
 	// ----------------------------------------------------------
 	
+	// changing vectors 
+	
+	std::vector<int> x(1001);	// a vector of 1000 zeros
+	std::iota(std::begin(x), std::end(x), -500);
+		// similar to `range()` in python, fills the range [m, n)
+		// the first two arguments are iterators that point to
+		// our chosen initial and final positions of the vector 
+		// the last argument is the starting number
+	
+	x.pop_back();
+	x.push_back(5000000);
+	
+	// try not to use:
+	// iterator erase(iterator pos)
+	// iterator insert(iterator pos, T vrednost)
+	
+	for (std::vector<int>::iterator it = x.begin();
+		it < x.end(); ++it) {
+			std::cout << *it << " ";
+		}
+	std::cout << "\n\nlength: " << x.size() << std::endl;
+	
+	// ----------------------------------------------------------
+	
 	// character strings
 	
 	// std::string name;
@@ -115,48 +141,71 @@ int main(){
 	
 	// sets 
 	
-	// std::set<typename T>	-- ordered, slower
-	std::set<int> a({1, 2, 2, 2, 1, 5, 6, 7, 8, 123123, 0});
-	
-	std::cout << "Thein ordered set: {";
-	for (std::set<int>::iterator it = a.begin();
-		it != a.end(); ++it) {
-			if (std::next(it, 1) == a.end()) {
-			std::cout << *it << "}" << std::endl;
-			}
-			else {
-				std::cout << *it << ", ";
-			}
-		}
-	// note: 
-	// `+` and `-` can't be used on `std::set<int>::iterator` 
+	// // std::set<typename T>	-- ordered, slower
+	// std::set<int> a({1, 2, 2, 2, 1, 5, 6, 7, 8, 123123, 0});
+	// 
+	// std::cout << "Thein ordered set: {";
+	// for (std::set<int>::iterator it = a.begin();
+	// 	it != a.end(); ++it) {
+	// 		if (std::next(it, 1) == a.end()) {
+	// 		std::cout << *it << "}" << std::endl;
+	// 		}
+	// 		else {
+	// 			std::cout << *it << ", ";
+	// 		}
+	// 	}
+	// // note: 
+	// // `+` and `-` can't be used on `std::set<int>::iterator` 
+	// 	
+	// // std::unordered_set<typename T> -- unordered, faster
+	// std::unordered_set<int> b({213213, 231, 5, 12343, 0, 8, 32});
+	// 
+	// std::cout << "Thein unordered set: {";
+	// for (std::unordered_set<int>::iterator it = b.begin();
+	// 	it != b.end(); ++it) {
+	// 		if (std::next(it, 1) == b.end()) {
+	// 			std::cout << *it << "}" << std::endl;
+	// 		}
+	// 		else {
+	// 			std::cout << *it << ", "; 
+	// 		}
+	// 	}
+	// 	
+	// // keep in mind `a` and `b` are different types of sets
+	// int i = 0;
+	// std::cout << "The amount of common elements: ";
+	// for (std::set<int>::iterator it = a.begin();
+	// 	it != a.end(); ++it){
+	// 		if (b.find(*it) != b.end()) {
+	// 			// `b.end()` returns an iterator referring
+	// 			// to the past-the-end element of `b`
+	// 			++i;
+	// 		}
+	// 	}
+	// std:: cout << i << std::endl;
 		
-	// std::unordered_set<typename T> -- unordered, faster
-	std::unordered_set<int> b({213213, 231, 5, 12343, 0, 8, 32});
+	// ----------------------------------------------------------
+
+	// maps and pairs
 	
-	std::cout << "Thein unordered set: {";
-	for (std::unordered_set<int>::iterator it = b.begin();
-		it != b.end(); ++it) {
-			if (std::next(it, 1) == b.end()) {
-				std::cout << *it << "}" << std::endl;
-			}
-			else {
-				std::cout << *it << ", "; 
-			}
-		}
-		
-	// keep in mind `a` and `b` are different types of sets
-	int i = 0;
-	std::cout << "The amount of common elements: ";
-	for (std::set<int>::iterator it = a.begin();
-		it != a.end(); ++it){
-			if (b.find(*it) != b.end()) {
-				// `b.end()` returns an iterator referring
-				// to the past-the-end element of `b`
-				++i;
-			}
-		}
-	std:: cout << i << std::endl;
+	// // std::pair<int, std::string> p = std::make_pair(1, "dude");
+	// // std::cout << "(" << p.first << ", " << p.second << ")\n";
+	// 
+	// std::string chars = "alphabeta";
+	// std::map<char, int> counter;
+	// 
+	// for (int i = 0; i < chars.length(); ++i){
+	// 	counter[chars[i]]++;
+	// }
+	// 
+	// // the `std::map<char, int>::iterator` is a pair
+	// for (std::map<char, int>::iterator it = counter.begin();
+	// 	it != counter.end(); ++it) {
+	// 		std::cout << it -> first << " => " << it -> second			 
+	// 				  << "  is the same as  " 
+	// 				  << (*it).first << " => " << (*it).second
+	// 		<< std::endl;
+	// 	}
 		
 	
 	return 0;
