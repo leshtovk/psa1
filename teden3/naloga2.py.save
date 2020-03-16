@@ -1,0 +1,21 @@
+(N, D) = tuple(map(int, input().split()))
+residents = tuple(map(int, input().split()))
+
+# print("amount of peoples:", N)
+# print("distance:", D)
+#
+# for i in range(len(residents)):
+#     print("resident", "%d:" % (i+1), residents[i])
+
+street_min = min(residents) - 3
+street_max = max(residents) + 3
+street = set(range(street_min, street_max))
+
+housing = dict()
+for resident in residents:
+    housing[resident] = housing.get(resident, 0) + 1
+
+# for lot in housing.keys():
+#     print(lot, housing[lot])
+
+uniqu
