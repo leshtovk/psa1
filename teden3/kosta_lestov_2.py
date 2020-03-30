@@ -1,3 +1,7 @@
+# Naloga 2: Sosedski odnosi
+# Kosta Leštov, 27171179
+# matematika, 3. letnik
+
 def count_nbs(nbd, D):
     counter = 0
     for i in range(len(nbd)):
