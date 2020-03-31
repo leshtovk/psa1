@@ -71,7 +71,56 @@ def find_starts(grid, goal, h, w):
         j = j + 1
 
     starts.sort(reverse = True)
+    starts = starts[:-3]
     return (starts, grid)
+
+
+def bfs(grid, grid_distance, h, w, initial):
+    visited = []
+    queue = [initial]
+    grid_distance[initial[0]][initial[1]] = 0
+
+    while queue != []:
+
+        node = queue.pop(0)
+        if node not in visited:
+
+            visited.append(node)
+            level = grid_distance[node[0]][node[1]] + 1
+
+            # check up:
+            if node[0] > 0:
+                if grid[node[0] - 1][node[1]] == "." and (node[0] - 1, node[1]) not in visited:
+                    queue.append((node[0] - 1, node[1]))
+                    grid_distance[node[0] - 1][node[1]] = level
+
+            # check down:
+            if node[0] < h-1:
+                if grid[node[0] + 1][node[1]] == "." and (node[0] + 1, node[1]) not in visited:
+                    queue.append((node[0] + 1, node[1]))
+                    grid_distance[node[0] + 1][node[1]] = level
+
+            # check left:
+            if node[1] > 0:
+                if grid[node[0]][node[1] - 1] == "." and (node[0], node[1] - 1) not in visited:
+                    queue.append((node[0], node[1] - 1))
+                    grid_distance[node[0]][node[1] - 1] = level
+
+            # check down:
+            if node[1] < w-1:
+                if grid[node[0]][node[1] + 1] == "." and (node[0], node[1] + 1) not in visited:
+                    queue.append((node[0], node[1] + 1))
+                    grid_distance[node[0]][node[1] + 1] = level
+
+    return grid_distance
+
+
+def get_answer(grid_distance, start, L):
+    if grid_distance[start[1][0]][start[1][1]] + start[0] <= L:
+        return(start[0] + 1)
+    else:
+        return(0)
+
 
 def main():
     # h -- number of rows
@@ -84,35 +133,47 @@ def main():
     for k in range(h):
         grid[k] = input()
 
+    # set the initial distances
+    grid_distance = [[1111 for j in range(w)] for i in range(h)]
+
     # print the maze
-    print("\nInput maze")
     for ln in grid:
         print(ln)
 
+    # get initial position
+    initial = find_on_grid(grid, "V")
+    print("\nInitial position:", initial)
 
-    # print an example
-    print("\nExample situation")
-
-    # get starting position
-    (i0, j0) = find_on_grid(grid, "V")
-    print("start:", (i0, j0))
-
-    # set the goal
-    (goals, grid_marked) = find_goals(grid[:], h, w)
-    G = goals[1]
-    print("chosen goal:", G)
-
-    # set the start of the final straight line
-    (starts, grid_circled) = find_starts(grid[:], G, h, w)
-    start = starts[0]
-    print("start of final line:", start)
-
-    # print the example maze
-    example_grid = grid[:]
-    example_grid[start[1][0]] = mark_tile(example_grid[start[1][0]], start[1][1], "o")
-    example_grid[G[0]] = mark_tile(example_grid[G[0]], G[1], "x")
-    for ln in example_grid:
+    # get the shortest distances from the initial position
+    shortest_distances = bfs(grid, grid_distance, h, w, initial)
+    print("\nBFS")
+    for ln in shortest_distances:
         print(ln)
+
+    # find the positions the knight has to reach
+    (goals, grid_marked) = find_goals(grid[:], h, w)
+    print("\nGoals:", goals)
+    for ln in grid_marked:
+        print(ln)
+
+    # obtain solution
+    print("Solution process:")
+
+    answers = []
+    for G in goals:
+        (starts, grid_circled) = find_starts(grid[:], G, h, w)
+        for start in starts:
+            print("goal:", G, "start:", start)
+            answer = get_answer(shortest_distances, start, L)
+            if answer != 0:
+                answers.append(answer)
+                print("added:", answer)
+                break
+            else:
+                answers.append(0)
+                print("added 0")
+
+    print(max(answers))
 
 main()
 
