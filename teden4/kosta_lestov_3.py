@@ -1,3 +1,7 @@
+# Naloga3: Vitez in zmaj
+# Kosta Leštov, 27171179
+# matematika, 3. letnik
+
 def find_on_grid(grid, mark):
     for k in range(len(grid)):
         ln = grid[k]
